@@ -29,25 +29,24 @@ module DefineRails
           class_methods do
 
             def add_encrypted_attribute(attribute_name, opts = {})
-              self.send :attr_encryptor, attribute_name, key: :sensitive_data_encryption_key,
-                                                         marshal: true
+              attr_encryptor attribute_name, key: :sensitive_data_encryption_key,
+                                             marshal: true
             end
 
             def add_sensitive_attribute_accessors(attribute_name)
 
-              unless self.respond_to? :sensitive_data
-                self.send :attr_encryptor, :sensitive_data, key: :sensitive_data_encryption_key,
-                                                            marshal: true
+              unless respond_to? :sensitive_data
+                attr_encryptor :sensitive_data, key: :sensitive_data_encryption_key,
+                                                marshal: true
               end
 
-              self.send(:define_method, attribute_name) do
-                self.sensitive_data = {} if self.sensitive_data.nil?
-
-                self.sensitive_data[attribute_name.to_s]
+              define_method(attribute_name) do
+                self.sensitive_data[attribute_name.to_s] \
+                  if self.sensitive_data.present?
               end
 
-              self.send(:define_method, "#{ attribute_name }=") do |the_value|
-                self.sensitive_data = {} if self.sensitive_data.nil?
+              define_method("#{ attribute_name }=") do |the_value|
+                self.sensitive_data ||= {}
 
                 self.sensitive_data[attribute_name.to_s] = the_value
                 self.sensitive_data = self.sensitive_data

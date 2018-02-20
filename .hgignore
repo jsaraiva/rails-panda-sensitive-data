@@ -1,0 +1,19 @@
+syntax: glob
+
+# Ignore bundler config.
+.bundle/
+
+log/*.log
+pkg/
+
+# Ignore dummy application stuff.
+test/dummy/db/*.sqlite3
+test/dummy/db/*.sqlite3-journal
+test/dummy/log/*.log
+test/dummy/tmp/
+test/dummy/.sass-cache
+
+# Ignore other unneeded files.
+doc/
+.DS_Store
+Gemfile.lock

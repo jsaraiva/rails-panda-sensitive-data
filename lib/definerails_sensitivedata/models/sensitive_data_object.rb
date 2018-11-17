@@ -33,24 +33,29 @@ module DefineRails
                                              marshal: true
             end
 
-            def add_sensitive_attribute_accessors(attribute_name)
+            def add_sensitive_attribute_accessors(attribute_name, opts = {})
+              in_attribute = opts[:in] || :sensitive_data
 
-              unless respond_to? :sensitive_data
-                attr_encryptor :sensitive_data, key: :sensitive_data_encryption_key,
-                                                marshal: true
+              unless respond_to? in_attribute
+                attr_encryptor in_attribute, key: :sensitive_data_encryption_key,
+                                             marshal: true
               end
 
               define_method(attribute_name) do
-                self.sensitive_data[attribute_name.to_s] \
-                  if self.sensitive_data.present?
+                the_attribute_value = self.send in_attribute
+
+                the_attribute_value&.dig(attribute_name)
               end
 
               define_method("#{ attribute_name }=") do |the_value|
-                self.sensitive_data ||= {}
+                the_attribute_value = self.send in_attribute
 
-                self.sensitive_data[attribute_name.to_s] = the_value
-                self.sensitive_data = self.sensitive_data
+                the_attribute_value = {} unless the_attribute_value.present?
+                the_attribute_value[attribute_name] = the_value
+                self.send "#{in_attribute}=", the_attribute_value
+                # self.send "#{in_attribute}_will_change!"
               end
+
             end
 
           end
@@ -98,30 +103,34 @@ module DefineRails
                                                          encode: true
             end
 
-            def add_sensitive_attribute_accessors(attribute_name)
+            def add_sensitive_attribute_accessors(attribute_name, opts = {})
+              in_attribute = opts[:in] || :sensitive_data
+              db_in_attribute = opts[:in_db] || in_attribute
 
               unless self.respond_to? :sensitive_data
-                self.send :field, :encrypted_snstv_dt, as: :encrypted_sensitive_data,
-                                                       type: String
-                self.send :field, :encrypted_snstv_dt_iv, as: :encrypted_sensitive_data_iv,
-                                                          type: String
+                self.send :field, "encrypted_#{db_in_attribute}", as: "encrypted_#{in_attribute}",
+                                                                  type: String
+                self.send :field, "encrypted_#{db_in_attribute}_iv", as: "encrypted_#{in_attribute}_iv",
+                                                                     type: String
 
-                self.send :attr_encryptor, :sensitive_data, key: :sensitive_data_encryption_key,
-                                                            marshal: true,
-                                                            encode: true
+                self.send :attr_encryptor, in_attribute, key: :sensitive_data_encryption_key,
+                                                         marshal: true,
+                                                         encode: true
               end
 
               self.send(:define_method, attribute_name) do
-                sensitive_data = {} if sensitive_data.nil?
+                the_attribute_value = self.send in_attribute
 
-                sensitive_data[attribute_name.to_s]
+                the_attribute_value&.dig(attribute_name)
               end
 
               self.send(:define_method, "#{ attribute_name }=") do |the_value|
-                sensitive_data = {} if sensitive_data.nil?
+                the_attribute_value = self.send in_attribute
 
-                sensitive_data[attribute_name.to_s] = the_value
-                sensitive_data = sensitive_data
+                the_attribute_value = {} unless the_attribute_value.present?
+                the_attribute_value[attribute_name] = the_value
+                self.send "#{in_attribute}=", the_attribute_value
+                # self.send "#{in_attribute}_will_change!"
               end
 
             end

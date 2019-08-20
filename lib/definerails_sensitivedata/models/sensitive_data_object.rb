@@ -41,13 +41,13 @@ module DefineRails
                                              marshal: true
               end
 
-              define_method(attribute_name) do
+              define_method attribute_name do
                 the_attribute_value = self.send in_attribute
 
                 the_attribute_value&.dig(attribute_name)
               end
 
-              define_method("#{ attribute_name }=") do |the_value|
+              define_method "#{ attribute_name }=" do |the_value|
                 the_attribute_value = self.send in_attribute
 
                 the_attribute_value = {} unless the_attribute_value.present?

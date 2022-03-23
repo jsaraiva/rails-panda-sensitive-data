@@ -31,6 +31,5 @@ module DefineRails
         @_sensitive_data_encryption_key
       end
     end
-
   end
 end

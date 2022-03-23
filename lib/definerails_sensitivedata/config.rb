@@ -22,8 +22,6 @@ module DefineRails
             '286f6ec0'
           end
       end
-
     end
-
   end
 end

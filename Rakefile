@@ -1,5 +1,6 @@
 begin
   require 'bundler/setup'
+  require 'rubocop/rake_task'
 rescue LoadError
   puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
 end
@@ -14,12 +15,7 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-
-
-
-
-
-Bundler::GemHelper.install_tasks
+require 'bundler/gem_tasks'
 
 require 'rake/testtask'
 
@@ -30,5 +26,7 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
+desc 'Run RuboCop checks'
+RuboCop::RakeTask.new(:rubocop)
 
-task default: :test
+task default: %i[test rubocop]

@@ -33,7 +33,6 @@ def copy_to_dir(target_dir, additional_excludes=[])
     '!log/.keep',
     'tmp/*',
     '!tmp/.keep',
-    'pkg/',
   ].each do |line|
     output = %x[echo "#{line}" >> "#{@target_gitignore_file}"]
     fail output if !output.empty?
@@ -55,14 +54,13 @@ def copy_generic(target_dir, additional_excludes=[])
 
   @command = ([
     'rsync',
-    '--progress --times --delete --delete-excluded --recursive',
+    '--progress --delete --delete-excluded --recursive --checksum --inplace',
 
-    '--filter="exclude .DS_Store"',
-    '--filter="exclude **/.DS_Store"',
-    '--filter="exclude test/"',
-    '--filter="exclude rakelib/"',
+    '--filter="- .DS_Store"',
+    '--filter="- **/.DS_Store"',
+    '--filter="- rakelib/"',
   ] +
-  additional_excludes.collect { |e| "--filter=\"exclude #{e}\"" } +
+  additional_excludes.collect { |e| "--filter=\"- #{e}\"" } +
   [
     '*',
 

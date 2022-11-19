@@ -1,4 +1,4 @@
-require 'definerails_sensitivedata/config'
+require "definerails_sensitivedata/config"
 
 module DefineRails
   module SensitiveData
@@ -9,7 +9,7 @@ module DefineRails
 
           # 16 chars
           raise unless \
-            env_encryption_key = ENV['SENSITIVE_DATA_ENCRYPTION_KEY']
+            env_encryption_key = ENV["SENSITIVE_DATA_ENCRYPTION_KEY"]
 
           # 8 chars
           codebase_encryption_key =
@@ -17,9 +17,9 @@ module DefineRails
           unless codebase_encryption_key.present?
             codebase_encryption_key =
               if Rails.env.production?
-                'a78683f4'
+                "a78683f4"
               else
-                '286f6ec0'
+                "286f6ec0"
               end
           end
 

@@ -17,9 +17,9 @@ module DefineRails
       def initialize
         @codebase_encryption_key =
           if Rails.env.production?
-            'a78683f4'
+            "a78683f4"
           else
-            '286f6ec0'
+            "286f6ec0"
           end
       end
     end

@@ -15,8 +15,5 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile"]
   # s.test_files = Dir["test/**/*"]
 
-  #s.add_dependency "rails"#, ">= 5.1.2"
-
-  # Get the "attr_encypted" gem
-  #s.add_dependency "attr_encrypted", github: "definescope/attr_encrypted"
+  #s.add_dependency "rails"#, ">= 7.0.0"
 end

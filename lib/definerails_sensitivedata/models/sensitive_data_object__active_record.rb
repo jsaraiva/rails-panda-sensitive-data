@@ -1,7 +1,6 @@
 module DefineRails
   module SensitiveData
     module Models
-
       module SensitiveDataObject
         module ActiveRecord
           extend ActiveSupport::Concern

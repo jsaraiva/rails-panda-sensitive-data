@@ -16,11 +16,13 @@ module DefineRails
         end
 
         def self.derive_from(password, salt = nil)
-          if salt.nil?
-            Key.new(password)
-          else
-            Key.new("#{password}_#{salt}")
-          end
+          Key.new(
+            if salt.nil?
+              password
+            else
+              "#{password}_#{salt}"
+            end
+          )
         end
 
       end

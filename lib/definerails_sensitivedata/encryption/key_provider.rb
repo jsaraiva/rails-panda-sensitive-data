@@ -7,7 +7,9 @@ module DefineRails
         def initialize
           super(
             Array(::ActiveRecord::Encryption.config.primary_key)
-              .collect {|password| ::DefineRails::SensitiveData::Encryption::Key.derive_from(password) }
+              .collect do |password|
+                ::DefineRails::SensitiveData::Encryption::Key.derive_from(password)
+              end
           )
         end
 

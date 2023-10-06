@@ -47,7 +47,7 @@ module DefineRails
               in_attribute = options.delete(:in)&.to_sym || :sensitive_data
 
               unless @__has_registered_sensitive_data_encrypted_attribute
-                serialize(in_attribute, Hash)
+                serialize(in_attribute, type: Hash, coder: YAML)
                 encrypts(in_attribute, **options)
                 @__has_registered_sensitive_data_encrypted_attribute = true
               end

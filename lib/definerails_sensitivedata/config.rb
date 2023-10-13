@@ -1,6 +1,6 @@
 module DefineRails
   module SensitiveData
-    class Config
+    class Config # rubocop:disable Lint/EmptyClass
     end
 
     class << self

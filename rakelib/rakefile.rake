@@ -29,8 +29,11 @@ def copy_to_dir(target_dir, additional_excludes=[])
     "--filter=\"- **/.DS_Store\"",
     "--filter=\"- node_modules/\"",
     "--filter=\"- rakelib/\"",
-    "--filter=\"- package.json/\"",
-    "--filter=\"- yarn.lock/\""
+    "--filter=\"- Gemfile\"",
+    "--filter=\"- Gemfile.lock\"",
+    "--filter=\"- package.json\"",
+    "--filter=\"- yarn.lock\"",
+    "--filter=\"- Rakefile\""
   ] +
   additional_excludes.collect { |e| "--filter=\"- #{e}\"" } +
   [

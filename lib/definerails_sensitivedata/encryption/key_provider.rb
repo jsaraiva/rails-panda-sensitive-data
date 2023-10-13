@@ -14,18 +14,18 @@ module DefineRails
         end
 
         def decryption_keys(encrypted_message)
-          _keys =
+          keys_for_decryption =
             if ::ActiveRecord::Encryption.config.store_key_references &&
                encrypted_message.headers.encrypted_data_key_id
               keys_grouped_by_id[encrypted_message.headers.encrypted_data_key_id]
             else
-              _primary_keys
+              primary_keys_to_use
             end
 
           key_salt = encrypted_message.headers[:ks]
 
-          if _keys && key_salt
-            return _keys.collect do |k|
+          if keys_for_decryption && key_salt
+            return keys_for_decryption.collect do |k|
               k.with_salt(key_salt)
             end
           end
@@ -35,15 +35,15 @@ module DefineRails
         private
 
         def active_primary_key
-          @active_primary_key ||= _primary_keys.last
+          @active_primary_key ||= primary_keys_to_use.last
         end
 
         def keys_grouped_by_id
-          @keys_grouped_by_id ||= _primary_keys.group_by(&:id)
+          @keys_grouped_by_id ||= primary_keys_to_use.group_by(&:id)
         end
 
-        def _primary_keys
-          @keys ||=
+        def primary_keys_to_use
+          @primary_keys_to_use ||=
           Array(::ActiveRecord::Encryption.config.primary_key)
             .collect do |password|
               ::DefineRails::SensitiveData::Encryption::Key.derive_from(password)

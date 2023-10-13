@@ -39,10 +39,8 @@ module DefineRails
               )
             end
 
-            def has_sensitive_data(*attributes, **options)
+            def has_sensitive_data(*attributes, **options) # rubocop:disable Naming/PredicateName
               return if attributes.blank?
-
-              store_empty_as_nil = options.delete(:store_empty_as_nil) != false
 
               in_attribute = options.delete(:in)&.to_sym || :sensitive_data
 
@@ -57,7 +55,7 @@ module DefineRails
 
                 define_method attribute_name do
                   the_hash = send(in_attribute)
-                  the_hash.dig(attribute_name) if the_hash.present?
+                  the_hash[attribute_name] if the_hash.present?
                 end
 
                 define_method "#{ attribute_name }=" do |the_value|
@@ -80,13 +78,13 @@ module DefineRails
 
                 define_method attribute_name_before_last_save do
                   send("#{in_attribute}_before_last_save")
-                    .then {|x| x.blank? ? nil : x }
+                    .then(&:presence)
                     &.dig(attribute_name)
                 end
 
                 define_method attribute_name_in_database do
                   send("#{in_attribute}_in_database")
-                    .then {|x| x.blank? ? nil : x }
+                    .then(&:presence)
                     &.dig(attribute_name)
                 end
 
@@ -100,6 +98,7 @@ module DefineRails
 
               end
             end
+
           end
         end
       end

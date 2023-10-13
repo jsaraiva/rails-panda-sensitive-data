@@ -8,6 +8,8 @@ module DefineRails
           empty_string_visible_in_db: true,
           store_nil_as_empty_string: true
           )
+          super()
+
           @empty_string_visible_in_db = empty_string_visible_in_db
           @store_nil_as_empty_string = store_nil_as_empty_string
         end
@@ -16,11 +18,7 @@ module DefineRails
           if clear_text.present?
             super
           elsif clear_text.nil?
-            if @store_nil_as_empty_string
-              ""
-            else
-              nil
-            end
+            "" if @store_nil_as_empty_string
           elsif clear_text.strip == ""
             if @empty_string_visible_in_db
               ""

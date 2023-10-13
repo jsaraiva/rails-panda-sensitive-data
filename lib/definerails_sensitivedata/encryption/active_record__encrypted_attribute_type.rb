@@ -15,9 +15,9 @@ module ActiveRecord
         with_context do
           encryptor.decrypt(value, **decryption_options)
         end
-      rescue ActiveRecord::Encryption::Errors::Base => error
+      rescue ActiveRecord::Encryption::Errors::Base => e
         if previous_types_without_clean_text.blank?
-          handle_deserialize_error(error, value)
+          handle_deserialize_error(e, value)
         else
           try_to_deserialize_with_previous_encrypted_types(value)
         end

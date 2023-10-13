@@ -1,0 +1,11 @@
+{
+  "name": "definerails_sensitivedata",
+  "productName": "DefineRails - Sensitive Data",
+  "version": "2.0.4",
+  "author": "DefineScope",
+  "license": "MIT",
+  "devDependencies": {
+    "@prettier/plugin-ruby": "^4.0.2",
+    "prettier": "^3.0.3"
+  }
+}

@@ -1,8 +1,10 @@
-$:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 
 require "definerails_sensitivedata/version"
 
 Gem::Specification.new do |s|
+  s.required_ruby_version = '>= 3.2'
+
   s.name        = "definerails_sensitivedata"
   s.version     = DefineRails::SensitiveData::VERSION
   s.authors     = ["DefineScope"]
@@ -15,5 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile"]
   # s.test_files = Dir["test/**/*"]
 
-  #s.add_dependency "rails"#, ">= 7.0.0"
+  s.add_dependency "rails", ">= 7.0.0"
+
+  s.metadata["rubygems_mfa_required"] = "true"
 end

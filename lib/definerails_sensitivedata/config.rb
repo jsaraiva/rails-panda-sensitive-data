@@ -9,7 +9,7 @@ module DefineRails
       end
 
       def config
-        @_config ||= Config.new
+        @config ||= Config.new
       end
     end
   end

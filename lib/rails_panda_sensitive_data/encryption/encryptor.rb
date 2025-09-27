@@ -1,13 +1,11 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     module Encryption
-
       class Encryptor < ::ActiveRecord::Encryption::Encryptor
-
         def initialize(
           empty_string_visible_in_db: true,
           store_nil_as_empty_string: true
-          )
+        )
           super()
 
           @empty_string_visible_in_db = empty_string_visible_in_db
@@ -44,9 +42,7 @@ module DefineRails
             end
           end
         end
-
       end
-
     end
   end
 end

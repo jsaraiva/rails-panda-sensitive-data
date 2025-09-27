@@ -1,14 +1,10 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     module Encryption
-
       class Key < ::ActiveRecord::Encryption::Key
-
         def initialize(password)
           @password = password
-          super(
-            ::ActiveRecord::Encryption.key_generator.derive_key_from(password)
-          )
+          super(::ActiveRecord::Encryption.key_generator.derive_key_from(password))
         end
 
         def with_salt(salt)
@@ -24,9 +20,7 @@ module DefineRails
             end
           )
         end
-
       end
-
     end
   end
 end

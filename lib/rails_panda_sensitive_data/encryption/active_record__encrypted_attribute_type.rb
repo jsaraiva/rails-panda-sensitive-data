@@ -1,8 +1,6 @@
 module ActiveRecord
   module Encryption
-
     class EncryptedAttributeType
-
       private
 
       def serialize_with_current(value)
@@ -22,8 +20,6 @@ module ActiveRecord
           try_to_deserialize_with_previous_encrypted_types(value)
         end
       end
-
     end
-
   end
 end

@@ -1,4 +1,4 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     module Models
       module SensitiveDataObject
@@ -25,11 +25,10 @@ module DefineRails
             set_encryption_key
             the_key =
               encryption_key +
-              ::DefineRails::SensitiveData.application_sensitive_data_encryption_key
+              ::RailsPanda::SensitiveData.application_sensitive_data_encryption_key
           end
 
           class_methods do
-
             def add_encrypted_attribute(attribute_name, opts = {})
               treat_nil_as_empty_value =
                 opts.delete(:treat_nil_as_empty_value) ? true : false
@@ -44,13 +43,13 @@ module DefineRails
               prefix = opts[:prefix] || "encrypted_"
               suffix = opts[:suffix] || ""
 
-              db_attribute_name = [ prefix, attribute_name, suffix ].join
+              db_attribute_name = [prefix, attribute_name, suffix].join
 
               attribute_name = opts.delete(:as) || attribute_name
 
               field_name =
                 opts[:attribute] ||
-                [ prefix, attribute_name, suffix ].join
+                [prefix, attribute_name, suffix].join
 
               field db_attribute_name, as: field_name, type: String
               field "#{db_attribute_name}_iv", as: "#{field_name}_iv", type: String
@@ -64,21 +63,20 @@ module DefineRails
                 **opts
               )
 
-              encryptor_getter_method_name = "__encryptor_#{ attribute_name }"
-              encryptor_setter_method_name = "__encryptor_#{ attribute_name }="
-              mem_value_attr = "@#{ attribute_name }"
+              encryptor_getter_method_name = "__encryptor_#{attribute_name}"
+              encryptor_setter_method_name = "__encryptor_#{attribute_name}="
+              mem_value_attr = "@#{attribute_name}"
 
-              attribute_name_before_last_save =
-                "#{attribute_name}_before_last_save".to_sym
+              attribute_name_before_last_save = :"#{attribute_name}_before_last_save"
 
               alias_method encryptor_getter_method_name, attribute_name
-              alias_method encryptor_setter_method_name, "#{ attribute_name }="
+              alias_method encryptor_setter_method_name, "#{attribute_name}="
 
               attr_reader attribute_name_before_last_save
               after_initialize do
                 if respond_to? encrypted_attribute_name
                   instance_variable_set(
-                    "@#{ attribute_name_before_last_save }",
+                    "@#{attribute_name_before_last_save}",
                     Marshal.load(Marshal.dump(send(attribute_name)))
                   )
                 end
@@ -89,7 +87,7 @@ module DefineRails
               end
 
               define_method attribute_name do
-                unless value = instance_variable_get(mem_value_attr)
+                unless (value = instance_variable_get(mem_value_attr))
 
                   db_value = send(encrypted_attribute_name)
 
@@ -106,15 +104,14 @@ module DefineRails
                 end
 
                 return "" if treat_nil_as_empty_value && value.nil?
-                return value
+                value
               end
 
-              define_method "#{ attribute_name }=" do |the_value|
+              define_method "#{attribute_name}=" do |the_value|
                 encrypted_attribute_name__set = "#{field_name}="
                 encrypted_attribute_iv_name__set = "#{field_name}_iv="
 
-                if nil_value_visible_in_db &&
-                    the_value.nil? && !treat_nil_as_empty_value
+                if nil_value_visible_in_db && the_value.nil? && !treat_nil_as_empty_value
                   send(encrypted_attribute_name__set, nil)
                   send(encrypted_attribute_iv_name__set, nil)
                   instance_variable_set(mem_value_attr, nil)
@@ -140,14 +137,13 @@ module DefineRails
 
             def add_sensitive_attribute_accessors(attribute_name, opts = {})
               in_attribute = opts.delete(:in) || :sensitive_data
-              in_attribute_before_last_save =
-                "#{in_attribute}_before_last_save".to_sym
+              in_attribute_before_last_save = :"#{in_attribute}_before_last_save"
               in_field_name =
                 opts[:attribute] ||
                 opts.delete(:in_db) ||
-                [ prefix, in_attribute, suffix ].join
+                [prefix, in_attribute, suffix].join
 
-              mem_value_attr = "@#{ in_attribute }"
+              mem_value_attr = "@#{in_attribute}"
 
               unless respond_to? in_attribute
                 field in_field_name, type: String
@@ -167,7 +163,7 @@ module DefineRails
                 after_initialize do
                   if respond_to?(in_field_name)
                     instance_variable_set(
-                      "@#{ in_attribute_before_last_save }",
+                      "@#{in_attribute_before_last_save}",
                       Marshal.load(Marshal.dump(send(in_attribute)))
                     )
                   end
@@ -183,7 +179,7 @@ module DefineRails
               end
 
               define_method attribute_name do
-                unless the_hash = instance_variable_get(mem_value_attr)
+                unless (the_hash = instance_variable_get(mem_value_attr))
                   db_value = send(in_field_name)
                   return nil if db_value.nil? || db_value == ""
 
@@ -194,11 +190,12 @@ module DefineRails
                 the_hash.dig(attribute_name)
               end
 
-              define_method "#{ attribute_name }=" do |the_value|
-                unless the_hash = instance_variable_get(mem_value_attr)
+              define_method "#{attribute_name}=" do |the_value|
+                unless (the_hash = instance_variable_get(mem_value_attr))
                   db_value = send(in_field_name)
-                  the_hash =
-                    send(in_attribute) unless db_value.nil? || db_value == ""
+                  unless db_value.nil? || db_value == ""
+                    the_hash = send(in_attribute)
+                  end
                 end
                 the_hash = {} if the_hash.nil? || the_hash == ""
 

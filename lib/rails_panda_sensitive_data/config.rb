@@ -1,4 +1,4 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     class Config # rubocop:disable Lint/EmptyClass
     end

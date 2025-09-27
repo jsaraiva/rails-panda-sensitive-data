@@ -1,6 +1,8 @@
 .DS_Store
-Gemfile.lock
 
 /.bundle/
 
-/node_modules/
+log/*
+!log/.keep
+tmp/*
+!tmp/.keep

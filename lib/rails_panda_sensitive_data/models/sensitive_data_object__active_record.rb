@@ -1,4 +1,4 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     module Models
       module SensitiveDataObject
@@ -6,7 +6,6 @@ module DefineRails
           extend ActiveSupport::Concern
 
           class_methods do
-
             def encrypts(*attributes, **options)
               return if attributes.blank?
 
@@ -20,12 +19,11 @@ module DefineRails
                 options.delete(:store_nil_as_empty_string) != false
 
               if key.nil?
-                key_provider ||=
-                  ::DefineRails::SensitiveData::Encryption::KeyProvider.new
+                key_provider ||= ::RailsPanda::SensitiveData::Encryption::KeyProvider.new
               end
 
               encryptor ||=
-                ::DefineRails::SensitiveData::Encryption::Encryptor.new(
+                ::RailsPanda::SensitiveData::Encryption::Encryptor.new(
                   empty_string_visible_in_db:,
                   store_nil_as_empty_string:
                 )
@@ -58,7 +56,7 @@ module DefineRails
                   the_hash[attribute_name] if the_hash.present?
                 end
 
-                define_method "#{ attribute_name }=" do |the_value|
+                define_method "#{attribute_name}=" do |the_value|
                   the_hash = send(in_attribute)
                   the_hash = {} if the_hash.blank?
 
@@ -71,10 +69,8 @@ module DefineRails
                   send("#{in_attribute}=", the_hash)
                 end
 
-                attribute_name_in_database =
-                  "#{attribute_name}_in_database".to_sym
-                attribute_name_before_last_save =
-                  "#{attribute_name}_before_last_save".to_sym
+                attribute_name_in_database = :"#{attribute_name}_in_database"
+                attribute_name_before_last_save = :"#{attribute_name}_before_last_save"
 
                 define_method attribute_name_before_last_save do
                   send("#{in_attribute}_before_last_save")
@@ -88,17 +84,15 @@ module DefineRails
                     &.dig(attribute_name)
                 end
 
-                define_method "saved_change_to_#{ attribute_name }?" do
+                define_method "saved_change_to_#{attribute_name}?" do
                   send(attribute_name) != send(attribute_name_before_last_save)
                 end
 
                 define_method "#{attribute_name}_changed?" do
                   send(attribute_name) != send(attribute_name_in_database)
                 end
-
               end
             end
-
           end
         end
       end

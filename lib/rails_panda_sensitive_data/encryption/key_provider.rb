@@ -1,9 +1,7 @@
-module DefineRails
+module RailsPanda
   module SensitiveData
     module Encryption
-
       class KeyProvider
-
         def encryption_key
           random__key_salt = ::SecureRandom.alphanumeric(8)
           active_primary_key.with_salt(random__key_salt).tap do |key|
@@ -16,7 +14,7 @@ module DefineRails
         def decryption_keys(encrypted_message)
           keys_for_decryption =
             if ::ActiveRecord::Encryption.config.store_key_references &&
-               encrypted_message.headers.encrypted_data_key_id
+                encrypted_message.headers.encrypted_data_key_id
               keys_grouped_by_id[encrypted_message.headers.encrypted_data_key_id]
             else
               primary_keys_to_use
@@ -44,14 +42,12 @@ module DefineRails
 
         def primary_keys_to_use
           @primary_keys_to_use ||=
-          Array(::ActiveRecord::Encryption.config.primary_key)
-            .collect do |password|
-              ::DefineRails::SensitiveData::Encryption::Key.derive_from(password)
-            end
+            Array(::ActiveRecord::Encryption.config.primary_key)
+              .collect do |password|
+                ::RailsPanda::SensitiveData::Encryption::Key.derive_from(password)
+              end
         end
-
       end
-
     end
   end
 end

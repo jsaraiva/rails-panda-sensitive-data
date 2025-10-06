@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module RailsPanda
   module SensitiveData
     module Encryption
       class Key < ::ActiveRecord::Encryption::Key
         def initialize(password)
-          @password = password
+          @password = password.freeze
           super(::ActiveRecord::Encryption.key_generator.derive_key_from(password))
         end
 
@@ -16,7 +18,7 @@ module RailsPanda
             if salt.nil?
               password
             else
-              "#{password}_#{salt}"
+              "#{password}_#{salt}".freeze
             end
           )
         end

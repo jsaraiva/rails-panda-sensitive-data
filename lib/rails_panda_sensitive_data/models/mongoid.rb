@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+require "active_support"
+require "active_support/concern"
+
 module RailsPanda
   module SensitiveData
     module Models

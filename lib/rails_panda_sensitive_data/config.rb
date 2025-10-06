@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RailsPanda
   module SensitiveData
     class Config # rubocop:disable Lint/EmptyClass

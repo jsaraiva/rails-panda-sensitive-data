@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_panda_sensitive_data/sensitive_data"
 require "rails_panda_sensitive_data/encryption/key"
 require "rails_panda_sensitive_data/encryption/key_provider"

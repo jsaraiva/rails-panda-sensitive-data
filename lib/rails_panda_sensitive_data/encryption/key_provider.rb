@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module RailsPanda
   module SensitiveData
     module Encryption
       class KeyProvider
         def encryption_key
-          random__key_salt = ::SecureRandom.alphanumeric(8)
+          random__key_salt = ::SecureRandom.alphanumeric(8).freeze
           active_primary_key.with_salt(random__key_salt).tap do |key|
             key.public_tags[:ks] = random__key_salt
             key.public_tags.encrypted_data_key_id = active_primary_key.id \
